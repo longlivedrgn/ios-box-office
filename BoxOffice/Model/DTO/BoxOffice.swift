@@ -40,6 +40,7 @@ struct DailyBoxOfficeList: Decodable, Hashable {
     let movieName: String
     let openDate: String
     let audienceAccumulation: String
+    let audienceCount: String
     let identifer = UUID()
 
     enum CodingKeys: String, CodingKey {
@@ -51,6 +52,7 @@ struct DailyBoxOfficeList: Decodable, Hashable {
         case movieName = "movieNm"
         case openDate = "openDt"
         case audienceAccumulation = "audiAcc"
+        case audienceCount = "audiCnt"
     }
 
     static func == (lhs: DailyBoxOfficeList, rhs: DailyBoxOfficeList) -> Bool {

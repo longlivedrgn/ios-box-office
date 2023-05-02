@@ -27,7 +27,10 @@ final class BoxOfficeViewController: UIViewController {
     }
 
     private func setup() {
-        boxofficeAPIManager.fetchData(to: BoxOffice.self, endPoint: BoxOfficeAPIEndpoints.boxOffice(targetDate: "20230501")) { [weak self] decodable in
+        boxofficeAPIManager.fetchData(to: BoxOffice.self,
+                                      endPoint: BoxOfficeAPIEndpoints.boxOffice(targetDate: "20230429")) {
+            [weak self] decodable in
+
             guard let boxoffice = decodable as? BoxOffice else { return }
             self?.movies = boxoffice.result.dailyBoxOfficeList
             self?.applySnapshot()
@@ -79,7 +82,7 @@ final class BoxOfficeViewController: UIViewController {
     private func configureDataSource() {
         dataSource = UICollectionViewDiffableDataSource<Section, DailyBoxOfficeList>(collectionView: boxOfficeCollectionView) { collectionView, indexPath, movie in
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: YesterdayBoxOfficeCell.identifier,
-                                                                for: indexPath) as? YesterdayBoxOfficeCell
+                                                          for: indexPath) as? YesterdayBoxOfficeCell
             cell?.configure(with: movie)
 
             return cell

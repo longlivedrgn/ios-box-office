@@ -8,11 +8,19 @@
 import UIKit
 
 final class YesterdayBoxOfficeCell: UICollectionViewCell {
+
     static let identifier = "YesterdayBoxOfficeCell"
+
+    let numberFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+
+        return formatter
+    }()
 
     let nameLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 20)
+        label.font = .systemFont(ofSize: 23)
         label.translatesAutoresizingMaskIntoConstraints = false
 
         return label
@@ -62,18 +70,55 @@ final class YesterdayBoxOfficeCell: UICollectionViewCell {
     func configure(with movie: DailyBoxOfficeList) {
         nameLabel.text = movie.movieName
         rankLabel.text = movie.rank
-        audienceLabel.text = movie.audienceAccumulation
-        dailyRankChangesLabel.text = movie.dailyRankChanges
+        audienceLabel.text = generateAudienceLabelText(with: movie)
+        setDailyRankChangesLabelText(with: movie)
+    }
+
+    private func generateAudienceLabelText(with movie: DailyBoxOfficeList) -> String {
+        guard let audienceAccumulationNumber = Int(movie.audienceAccumulation) else { return "" }
+        guard let audienceCountNumber = Int(movie.audienceCount) else { return "" }
+
+        guard let audienceAccumulation = numberFormatter.string(for: audienceAccumulationNumber) else {
+            return String(audienceAccumulationNumber)
+        }
+        guard let dailyAudienceCount = numberFormatter.string(for: audienceCountNumber) else {
+            return String(audienceCountNumber)
+        }
+
+        let audienceLabelText = "오늘 \(dailyAudienceCount) / 총 \(audienceAccumulation)"
+
+        return audienceLabelText
+    }
+
+    private func setDailyRankChangesLabelText(with movie: DailyBoxOfficeList) {
+
+        switch movie.rankOldAndNew {
+        case .new:
+            dailyRankChangesLabel.text = "신작"
+            dailyRankChangesLabel.textColor = UIColor.red
+            return
+        case .old:
+            guard let dailyRankChanges = Int(movie.dailyRankChanges) else { return }
+
+            if dailyRankChanges > 0 {
+                dailyRankChangesLabel.text = "🔺\(movie.dailyRankChanges)"
+            } else if dailyRankChanges < 0 {
+                dailyRankChangesLabel.text = "🔹\(movie.dailyRankChanges)"
+            } else {
+                dailyRankChangesLabel.text = "-"
+            }
+            return
+        }
     }
 
     private func configureConstraints() {
-        rankLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20).isActive = true
+        rankLabel.centerXAnchor.constraint(equalTo: leadingAnchor, constant: 35).isActive = true
         rankLabel.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
 
-        nameLabel.leadingAnchor.constraint(equalTo: rankLabel.trailingAnchor, constant: 20).isActive = true
+        nameLabel.leadingAnchor.constraint(equalTo: rankLabel.centerXAnchor, constant: 35).isActive = true
         nameLabel.topAnchor.constraint(equalTo: topAnchor, constant: 15).isActive = true
 
-        dailyRankChangesLabel.leadingAnchor.constraint(equalTo: rankLabel.leadingAnchor, constant: 2).isActive = true
+        dailyRankChangesLabel.centerXAnchor.constraint(equalTo: rankLabel.centerXAnchor).isActive = true
         dailyRankChangesLabel.topAnchor.constraint(equalTo: rankLabel.bottomAnchor, constant: 5).isActive = true
 
         audienceLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor).isActive = true
