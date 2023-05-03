@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class YesterdayBoxOfficeCell: UICollectionViewCell {
+final class YesterdayBoxOfficeCell: UICollectionViewListCell {
 
     static let identifier = "YesterdayBoxOfficeCell"
 

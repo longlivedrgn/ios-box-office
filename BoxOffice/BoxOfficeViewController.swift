@@ -83,6 +83,7 @@ final class BoxOfficeViewController: UIViewController {
         dataSource = UICollectionViewDiffableDataSource<Section, DailyBoxOfficeList>(collectionView: boxOfficeCollectionView) { collectionView, indexPath, movie in
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: YesterdayBoxOfficeCell.identifier,
                                                           for: indexPath) as? YesterdayBoxOfficeCell
+            cell?.accessories = [.disclosureIndicator()]
             cell?.configure(with: movie)
 
             return cell
