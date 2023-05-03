@@ -69,7 +69,7 @@ final class BoxOfficeViewController: UIViewController {
             item.contentInsets = NSDirectionalEdgeInsets(top: 2, leading: 2, bottom: 2, trailing: 2)
 
             let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                   heightDimension: .absolute(80))
+                                                   heightDimension: .fractionalWidth(0.2))
             let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
 
             let section = NSCollectionLayoutSection(group: group)
