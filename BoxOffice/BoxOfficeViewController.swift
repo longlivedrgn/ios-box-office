@@ -13,6 +13,11 @@ final class BoxOfficeViewController: UIViewController {
         case main
     }
 
+    enum Constant {
+        static let navigationItemTitle = "데이터 받아오는 중!~"
+        // 오늘 날짜 넣기~
+    }
+
     var dataSource: UICollectionViewDiffableDataSource<Section, DailyBoxOfficeList>!
     var boxOfficeCollectionView: UICollectionView!
     let boxofficeAPIManager = BoxOfficeAPIManager()
@@ -20,13 +25,15 @@ final class BoxOfficeViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = "데이터 받아오는 중!~"
         setup()
         configureCollectionView()
         configureDataSource()
     }
 
     private func setup() {
+        navigationItem.title = Constant.navigationItemTitle
+        view.backgroundColor = .systemBackground
+
         boxofficeAPIManager.fetchData(to: BoxOffice.self,
                                       endPoint: BoxOfficeAPIEndpoints.boxOffice(targetDate: "20230429")) {
             [weak self] decodable in
@@ -49,11 +56,20 @@ final class BoxOfficeViewController: UIViewController {
     }
 
     private func configureCollectionView() {
-        boxOfficeCollectionView = UICollectionView(frame: view.bounds,
-                                                   collectionViewLayout: createLayout())
+        boxOfficeCollectionView = UICollectionView(frame: .zero, collectionViewLayout: createLayout())
         view.addSubview(boxOfficeCollectionView)
+        configureCollectionViewLayout()
         registerCell(in: boxOfficeCollectionView)
+    }
 
+    private func configureCollectionViewLayout() {
+        let safeAreaGuide = view.safeAreaLayoutGuide
+
+        boxOfficeCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        boxOfficeCollectionView.leadingAnchor.constraint(equalTo: safeAreaGuide.leadingAnchor).isActive = true
+        boxOfficeCollectionView.trailingAnchor.constraint(equalTo: safeAreaGuide.trailingAnchor).isActive = true
+        boxOfficeCollectionView.bottomAnchor.constraint(equalTo: safeAreaGuide.bottomAnchor).isActive = true
+        boxOfficeCollectionView.topAnchor.constraint(equalTo: safeAreaGuide.topAnchor).isActive = true
     }
 
     private func registerCell(in collectionView: UICollectionView) {
@@ -62,20 +78,12 @@ final class BoxOfficeViewController: UIViewController {
     }
 
     private func createLayout() -> UICollectionViewCompositionalLayout {
-        let layout = UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
-            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                  heightDimension: .fractionalHeight(1.0))
-            let item = NSCollectionLayoutItem(layoutSize: itemSize)
-            item.contentInsets = NSDirectionalEdgeInsets(top: 2, leading: 2, bottom: 2, trailing: 2)
+        let layout = UICollectionViewCompositionalLayout { section, layoutEnvironment in
+            let configuration = UICollectionLayoutListConfiguration(appearance: .plain)
 
-            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                   heightDimension: .fractionalWidth(0.2))
-            let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
-
-            let section = NSCollectionLayoutSection(group: group)
-
-            return section
+            return NSCollectionLayoutSection.list(using: configuration, layoutEnvironment: layoutEnvironment)
         }
+
         return layout
     }
 

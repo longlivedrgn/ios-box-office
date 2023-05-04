@@ -98,25 +98,52 @@ final class YesterdayBoxOfficeCell: UICollectionViewListCell {
             dailyRankChangesLabel.textColor = UIColor.red
             return
         case .old:
-            guard let dailyRankChanges = Int(movie.dailyRankChanges) else { return }
-
-            if dailyRankChanges > 0 {
-                dailyRankChangesLabel.text = "🔺\(movie.dailyRankChanges)"
-            } else if dailyRankChanges < 0 {
-                dailyRankChangesLabel.text = "🔹\(movie.dailyRankChanges)"
-            } else {
-                dailyRankChangesLabel.text = "-"
-            }
+            setOldRankChangesLabelText(with: movie)
             return
         }
     }
 
+    private func setOldRankChangesLabelText(with movie: DailyBoxOfficeList) {
+        guard let dailyRankChanges = Int(movie.dailyRankChanges) else { return }
+
+        if dailyRankChanges > 0 {
+            let image = UIImage(systemName: "arrowtriangle.up.fill")?.withTintColor(.red)
+            let dailytRankChangesText = generateRankChangesAttributedText(movie.dailyRankChanges,
+                                                                          with: image)
+            dailyRankChangesLabel.attributedText = dailytRankChangesText
+        } else if dailyRankChanges < 0 {
+            let image = UIImage(systemName: "arrowtriangle.down.fill")?.withTintColor(.blue)
+            let dailytRankChangesText = generateRankChangesAttributedText(movie.dailyRankChanges,
+                                                                          with: image)
+            dailyRankChangesLabel.attributedText = dailytRankChangesText
+        } else {
+            dailyRankChangesLabel.text = "-"
+        }
+    }
+
+    private func generateRankChangesAttributedText(_ text: String,
+                                                   with image: UIImage?) -> NSMutableAttributedString {
+        let attachment = NSTextAttachment()
+        attachment.image = image
+
+        let rankChangesAttributedText = NSMutableAttributedString(attachment: attachment)
+        let text = NSAttributedString(string: text)
+        rankChangesAttributedText.append(text)
+
+        return rankChangesAttributedText
+    }
+
     private func configureConstraints() {
+        let heightConstraint = contentView.heightAnchor.constraint(equalToConstant: 80)
+        heightConstraint.priority = .defaultHigh
+        heightConstraint.isActive = true
+
         rankLabel.centerXAnchor.constraint(equalTo: leadingAnchor, constant: 35).isActive = true
         rankLabel.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
 
         nameLabel.leadingAnchor.constraint(equalTo: rankLabel.centerXAnchor, constant: 35).isActive = true
         nameLabel.topAnchor.constraint(equalTo: topAnchor, constant: 15).isActive = true
+        nameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -35).isActive = true
 
         dailyRankChangesLabel.centerXAnchor.constraint(equalTo: rankLabel.centerXAnchor).isActive = true
         dailyRankChangesLabel.topAnchor.constraint(equalTo: rankLabel.bottomAnchor, constant: 5).isActive = true
