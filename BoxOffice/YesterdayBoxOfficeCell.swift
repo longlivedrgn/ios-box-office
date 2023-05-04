@@ -11,14 +11,14 @@ final class YesterdayBoxOfficeCell: UICollectionViewListCell {
 
     static let identifier = "YesterdayBoxOfficeCell"
 
-    let numberFormatter: NumberFormatter = {
+    private let numberFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
 
         return formatter
     }()
 
-    let nameLabel: UILabel = {
+    private let nameLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 23)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -26,7 +26,7 @@ final class YesterdayBoxOfficeCell: UICollectionViewListCell {
         return label
     }()
 
-    let audienceLabel: UILabel = {
+    private let audienceLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -34,7 +34,7 @@ final class YesterdayBoxOfficeCell: UICollectionViewListCell {
         return label
     }()
 
-    let rankLabel: UILabel = {
+    private let rankLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 30)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -42,7 +42,7 @@ final class YesterdayBoxOfficeCell: UICollectionViewListCell {
         return label
     }()
 
-    let dailyRankChangesLabel: UILabel = {
+    private let dailyRankChangesLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16)
         label.translatesAutoresizingMaskIntoConstraints = false

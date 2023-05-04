@@ -9,19 +9,19 @@ import UIKit
 
 final class BoxOfficeViewController: UIViewController {
 
-    enum Section {
+    private enum Section {
         case main
     }
 
-    enum Constant {
+    private enum Constant {
         static let navigationItemTitle = "데이터 받아오는 중!~"
         // 오늘 날짜 넣기~
     }
 
-    var dataSource: UICollectionViewDiffableDataSource<Section, DailyBoxOfficeList>!
-    var boxOfficeCollectionView: UICollectionView!
-    let boxofficeAPIManager = BoxOfficeAPIManager()
-    var movies: [DailyBoxOfficeList]!
+    private var dataSource: UICollectionViewDiffableDataSource<Section, DailyBoxOfficeList>!
+    private var boxOfficeCollectionView: UICollectionView!
+    private let boxofficeAPIManager = BoxOfficeAPIManager()
+    private var movies: [DailyBoxOfficeList]!
 
     override func viewDidLoad() {
         super.viewDidLoad()
