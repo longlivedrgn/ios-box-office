@@ -30,8 +30,20 @@ struct BoxOfficeResult: Decodable {
 
 }
 
-struct DailyBoxOfficeList: Decodable {
+struct DailyBoxOfficeList: Decodable, Hashable {
 
+    //MARK: - Hashable
+    let id = UUID()
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+
+    static func == (lhs: DailyBoxOfficeList, rhs: DailyBoxOfficeList) -> Bool {
+        return lhs.id == rhs.id
+    }
+
+    //MARK: - Contents
     let orderNumber: String
     let rank: String
     let dailyRankChanges: String
