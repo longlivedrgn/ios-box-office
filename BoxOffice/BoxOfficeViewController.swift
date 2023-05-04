@@ -20,6 +20,7 @@ final class BoxOfficeViewController: UIViewController {
 
     private var dataSource: UICollectionViewDiffableDataSource<Section, DailyBoxOfficeList>!
     private var boxOfficeCollectionView: UICollectionView!
+    private var loadingIndicatorView = UIActivityIndicatorView(style: .large)
     private let boxofficeAPIManager = BoxOfficeAPIManager()
     private var movies: [DailyBoxOfficeList]!
 
@@ -33,6 +34,7 @@ final class BoxOfficeViewController: UIViewController {
     private func setup() {
         navigationItem.title = Constant.navigationItemTitle
         view.backgroundColor = .systemBackground
+        showIndicatorView()
 
         boxofficeAPIManager.fetchData(to: BoxOffice.self,
                                       endPoint: BoxOfficeAPIEndpoints.boxOffice(targetDate: "20230429")) {
@@ -43,6 +45,7 @@ final class BoxOfficeViewController: UIViewController {
             self?.applySnapshot()
             DispatchQueue.main.async {
                 self?.navigationItem.title = "2023-05-01"
+                self?.hideIndicatorView()
             }
         }
     }
@@ -100,3 +103,29 @@ final class BoxOfficeViewController: UIViewController {
 
 }
 
+extension BoxOfficeViewController {
+
+    private func window() -> UIWindow {
+        let scenes = UIApplication.shared.connectedScenes
+        let windowScene = scenes.first as? UIWindowScene
+        guard let window = windowScene?.windows.first else { return UIWindow() }
+
+        return window
+    }
+
+    private func showIndicatorView() {
+        let window = window()
+        loadingIndicatorView.frame = window.frame
+        loadingIndicatorView.color = .brown
+        window.addSubview(loadingIndicatorView)
+        loadingIndicatorView.startAnimating()
+    }
+
+    private func hideIndicatorView() {
+        let window = window()
+        let indicatorView = window.subviews.first { $0 is UIActivityIndicatorView }
+        guard let indicatorView = indicatorView else { return }
+        indicatorView.removeFromSuperview()
+    }
+
+}
