@@ -20,7 +20,6 @@ final class BoxOfficeChartCell: UICollectionViewListCell {
         static let today: String = "Today"
         static let total: String = "Total"
         static let audienceAmoutSkeletonText: String = "\(Constants.today) - / \(Constants.total) -"
-        static let detailButtonImageSystemName: String = "chevron.forward"
 
         static let movieTitleFontSize: CGFloat = 21.0
         static let audienceFontSize: CGFloat = 17.0
@@ -110,6 +109,12 @@ final class BoxOfficeChartCell: UICollectionViewListCell {
     }
 
     private func setLayoutConfiguration() {
+
+        translatesAutoresizingMaskIntoConstraints = false
+        let cellHeight = contentView.heightAnchor.constraint(equalToConstant: 80)
+        cellHeight.priority = .defaultHigh
+        cellHeight.isActive = true
+
         rankStackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             rankStackView.widthAnchor.constraint(equalToConstant: Constants.rankStackViewWidth),
@@ -126,16 +131,34 @@ final class BoxOfficeChartCell: UICollectionViewListCell {
         ])
     }
 
-    private func rankState(rankChanges: String) -> String {
-        guard let changes = Int(rankChanges) else { return Constants.rankStateSkeletonText }
-        if changes == 0 { return Constants.rankStateSkeletonText }
-        let state = changes > 0 ? Constants.rankUpState : Constants.rankDownState
-        return state + String(abs(changes))
+    private func rankState(rankChanges: String) -> NSMutableAttributedString {
+
+        let text = NSMutableAttributedString(string: Constants.rankStateSkeletonText)
+        guard let changes = Int(rankChanges) else { return text }
+        if changes == 0 { return text }
+        return  generateArrowWithNumber(changes: changes)
+    }
+
+    private func generateArrowWithNumber(changes: Int) -> NSMutableAttributedString {
+        let number = String(abs(changes))
+
+        if changes > 0 {
+            let rankState = Constants.rankUpState + number
+            let mutableAttributedString = NSMutableAttributedString(string: rankState)
+            mutableAttributedString.addAttributes([.foregroundColor: UIColor.systemRed], range: NSRange(location: 0, length: 1))
+            return mutableAttributedString
+        }
+        if changes < 0 {
+            let rankState = Constants.rankDownState + number
+            let mutableAttributedString = NSMutableAttributedString(string: rankState)
+            mutableAttributedString.addAttributes([.foregroundColor: UIColor.systemBlue], range: NSRange(location: 0, length: 1))
+            return mutableAttributedString
+        }
+
+        return NSMutableAttributedString()
     }
 
     //MARK: - Pulblic
-
-
     func configration(title: String, rank: String, changes: String, dailyAudience: String, totalAudience: String, oldAndNew: RankOldAndNew) {
         self.movieTitle.text = title
         self.rankedNumber.text = rank
@@ -145,7 +168,7 @@ final class BoxOfficeChartCell: UICollectionViewListCell {
         case .new:
             self.rankState.text = Constants.rankNewState
         case .old:
-            self.rankState.text = rankState(rankChanges: changes)
+            self.rankState.attributedText = rankState(rankChanges: changes)
         }
     }
 }

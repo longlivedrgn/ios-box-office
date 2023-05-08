@@ -18,22 +18,11 @@ final class BoxOfficeViewController: UIViewController {
 
     private var collectionView: UICollectionView?
     private var chartDataSource: dataSource?
-    private var chartSnapshot = snapshot()
-
-    private var dailyBoxOfficeList: [DailyBoxOfficeList] = [] {
-        didSet {
-            DispatchQueue.main.async { [weak self] in
-                self?.chartSnapshot.appendItems(self!.dailyBoxOfficeList)
-                self?.chartDataSource?.apply(self!.chartSnapshot)
-            }
-        }
-    }
-
+    private var dailyBoxOfficeList: [DailyBoxOfficeList] = []
     private let boxOfficeManager = BoxOfficeAPIManager()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         setUpUI()
         fetchBoxOfficeData()
     }
@@ -43,7 +32,6 @@ final class BoxOfficeViewController: UIViewController {
         navigationItem.title = "Today's Box Office"
         configureCollectionView()
         configureDataSourece()
-        snapshotForCurrentState()
         setCollectionVeiwLayout()
     }
 
@@ -72,45 +60,45 @@ final class BoxOfficeViewController: UIViewController {
     }
 
     private func generateLayout() -> UICollectionViewLayout {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalWidth(0.21))
-        let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
-
-        let section = NSCollectionLayoutSection(group: group)
-
-        let layout = UICollectionViewCompositionalLayout(section: section)
+        let layout = UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
+            let configuration = UICollectionLayoutListConfiguration(appearance: .plain)
+            let section = NSCollectionLayoutSection.list(using: configuration, layoutEnvironment: layoutEnvironment)
+            return section
+        }
         return layout
     }
 
-    private func snapshotForCurrentState() {
-        chartSnapshot.appendSections([Section.main])
+    private func snapshotForCurrentState(withAnimate animate: Bool) {
+        var snapshot = snapshot()
+        snapshot.appendSections([.main])
+        snapshot.appendItems(dailyBoxOfficeList)
+        chartDataSource?.apply(snapshot, animatingDifferences: animate)
     }
 
 
     private func configureDataSourece() {
         guard let collectionView else { return }
+
         chartDataSource = dataSource(collectionView: collectionView) {
             (collectionView: UICollectionView, indexPath: IndexPath, item: DailyBoxOfficeList) -> UICollectionViewCell? in
 
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: BoxOfficeChartCell.identifier, for: indexPath) as? BoxOfficeChartCell else { fatalError("Error: DataSource") }
 
-            let dailyBoxOfficeList = self.dailyBoxOfficeList[indexPath.item]
-
-            cell.configration(title: dailyBoxOfficeList.movieName , rank: dailyBoxOfficeList.rank, changes: dailyBoxOfficeList.dailyRankChanges, dailyAudience: dailyBoxOfficeList.audienceAccumulation, totalAudience: dailyBoxOfficeList.audienceAccumulation, oldAndNew: dailyBoxOfficeList.rankOldAndNew)
+            cell.configration(title: item.movieName , rank: item.rank, changes: item.dailyRankChanges, dailyAudience: item.audienceAccumulation, totalAudience: item.audienceAccumulation, oldAndNew: item.rankOldAndNew)
 
             cell.accessories = [.disclosureIndicator()]
 
             return cell
         }
-        chartDataSource?.apply(chartSnapshot, animatingDifferences: false)
+        snapshotForCurrentState(withAnimate: false)
     }
 
     private func fetchBoxOfficeData() {
-        boxOfficeManager.fetchData(to: BoxOffice.self, endPoint: .boxOffice(targetDate: "20230503")) { data in
+        boxOfficeManager.fetchData(to: BoxOffice.self, endPoint: .boxOffice(targetDate: "20230506")) { data in
             guard let boxOffice = data as? BoxOffice else { return }
             self.dailyBoxOfficeList = boxOffice.result.dailyBoxOfficeList
+            self.snapshotForCurrentState(withAnimate: false)
         }
     }
 
