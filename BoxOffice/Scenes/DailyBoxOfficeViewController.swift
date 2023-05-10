@@ -46,6 +46,7 @@ final class DailyBoxOfficeViewController: UIViewController {
 
     private func configureCollectionView() {
         dailyBoxOfficeCollectionView = UICollectionView(frame: .zero, collectionViewLayout: createLayout())
+        dailyBoxOfficeCollectionView?.delegate = self
         guard let dailyBoxOfficeCollectionView else { return }
         view.addSubview(dailyBoxOfficeCollectionView)
         dailyBoxOfficeCollectionView.register(DailyBoxOfficeCell.self,
@@ -153,4 +154,15 @@ extension DailyBoxOfficeViewController {
         self.dailyBoxOfficeCollectionView?.refreshControl?.endRefreshing()
     }
 
+}
+
+extension DailyBoxOfficeViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView,
+                        didSelectItemAt indexPath: IndexPath) {
+        dailyBoxOfficeCollectionView?.deselectItem(at: indexPath, animated: true)
+        guard let movie = dataSource?.itemIdentifier(for: indexPath) else { return }
+        let detailViewController = BoxOfficeDetailViewController(movie: movie, BoxOfficeAPIManager: boxOfficeManager)
+        detailViewController.navigationItem.title = movie.movieName
+        self.navigationController?.pushViewController(detailViewController, animated: true)
+    }
 }
