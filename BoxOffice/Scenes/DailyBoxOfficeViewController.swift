@@ -88,18 +88,16 @@ final class DailyBoxOfficeViewController: UIViewController {
     }
 
     private func fetchBoxOfficeData() {
+        Task {
         showIndicatorview()
         let yesterDay = Date.yesterDayDateConvertToString()
         let yesterdayDashExcepted = yesterDay.except(for: "-")
 
-        boxOfficeManager.fetchData(to: BoxOffice.self, endPoint: .boxOffice(targetDate: yesterdayDashExcepted))
-        { [weak self] data in
-            guard let boxOffice = data as? BoxOffice else { return }
-            self?.movies = boxOffice.result.dailyBoxOfficeList
-            DispatchQueue.main.async {
-                self?.navigationItem.title = yesterDay
-                self?.hideIndicatorView()
-            }
+        let boxOffice = try await boxOfficeManager.fetchData(to: BoxOffice.self, endPoint: .boxOffice(targetDate: yesterdayDashExcepted))
+            movies = boxOffice.result.dailyBoxOfficeList
+            navigationItem.title = yesterDay
+            self.dailyBoxOfficeCollectionView?.refreshControl?.endRefreshing()
+            hideIndicatorView()
         }
     }
 
@@ -150,7 +148,7 @@ extension DailyBoxOfficeViewController {
     }
 
     @objc private func handleRefreshControl() {
-        self.dailyBoxOfficeCollectionView?.refreshControl?.endRefreshing()
+        fetchBoxOfficeData()
     }
 
 }

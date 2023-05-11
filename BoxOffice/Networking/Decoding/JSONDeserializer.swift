@@ -11,7 +11,7 @@ final class JSONDeserializer {
 
     private let decoder = JSONDecoder()
 
-    func deserialize(type: Decodable.Type, data: Data) throws -> Decodable {
+    func deserialize<T: Decodable>(type: T.Type, data: Data) throws -> T {
         try decoder.decode(type.self, from: data)
     }
 
