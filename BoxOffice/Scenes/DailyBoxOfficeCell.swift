@@ -15,7 +15,7 @@ final class DailyBoxOfficeCell: UICollectionViewListCell {
 
         static let upSymbolName: String = "arrowtriangle.up.fill"
         static let downSymbolName: String = "arrowtriangle.down.fill"
-        static let noneChangeOfRankState = "-"
+        static let noneChangeOfRankState: String = "-"
         static let rankNewState: String = "신작"
         static let today: String = "오늘 "
         static let total: String = " / 총 "
@@ -73,6 +73,7 @@ final class DailyBoxOfficeCell: UICollectionViewListCell {
         stackView.axis = .vertical
         stackView.alignment = .center
         stackView.distribution = .fillProportionally
+        stackView.translatesAutoresizingMaskIntoConstraints = false
 
         return stackView
     }()
@@ -82,10 +83,10 @@ final class DailyBoxOfficeCell: UICollectionViewListCell {
         stackView.axis = .vertical
         stackView.alignment = .leading
         stackView.distribution = .fillProportionally
+        stackView.translatesAutoresizingMaskIntoConstraints = false
 
         return stackView
     }()
-
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -94,15 +95,18 @@ final class DailyBoxOfficeCell: UICollectionViewListCell {
         configureConstraints()
     }
 
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     private func configureHierarchy() {
+        addSubview(rankVerticalStackView)
         rankVerticalStackView.addArrangedSubview(rankNumberLabel)
         rankVerticalStackView.addArrangedSubview(dailyRankChangesLabel)
 
+        addSubview(titleAudienceVerticalStackView)
         titleAudienceVerticalStackView.addArrangedSubview(movieTitleLabel)
         titleAudienceVerticalStackView.addArrangedSubview(audienceLabel)
-
-        addSubview(rankVerticalStackView)
-        addSubview(titleAudienceVerticalStackView)
     }
 
     private func configureConstraints() {
@@ -110,13 +114,11 @@ final class DailyBoxOfficeCell: UICollectionViewListCell {
         cellHeightConstraint.priority = .defaultHigh
         cellHeightConstraint.isActive = true
 
-        rankVerticalStackView.translatesAutoresizingMaskIntoConstraints = false
         rankVerticalStackView.widthAnchor.constraint(equalToConstant: Constants.rankStackViewWidth).isActive = true
         rankVerticalStackView.topAnchor.constraint(equalTo: topAnchor, constant: Constants.rankStackViewInset).isActive = true
         rankVerticalStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Constants.rankStackViewInset).isActive = true
         rankVerticalStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.rankStackViewleadingInset).isActive = true
 
-        titleAudienceVerticalStackView.translatesAutoresizingMaskIntoConstraints = false
         titleAudienceVerticalStackView.topAnchor.constraint(equalTo: topAnchor, constant: Constants.titleStackViewInset).isActive = true
         titleAudienceVerticalStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Constants.titleStackViewInset).isActive = true
         titleAudienceVerticalStackView.leadingAnchor.constraint(equalTo: rankVerticalStackView.trailingAnchor, constant: .zero).isActive = true
@@ -131,17 +133,15 @@ final class DailyBoxOfficeCell: UICollectionViewListCell {
     }
 
     private func generateAudienceLabelText(with movie: DailyBoxOffice) -> String {
-        guard let audienceAccumulationNumber = Int(movie.audienceAccumulation) as? NSNumber,
-              let audienceCountNumber = Int(movie.audienceCount) as? NSNumber else { return String() }
+        var audienceLabelText = Constants.today + movie.audienceAccumulation + Constants.total + movie.audienceCount
 
-        guard let audienceAccumulation = numberFormatter.string(from: audienceAccumulationNumber ) else {
-            return movie.audienceAccumulation
-        }
-        guard let dailyAudienceCount = numberFormatter.string(from: audienceCountNumber as NSNumber) else {
-            return movie.audienceCount
-        }
+        guard let audienceAccumulationNumber = Int(movie.audienceAccumulation),
+              let audienceCountNumber = Int(movie.audienceCount) else { return audienceLabelText }
 
-        let audienceLabelText = Constants.today + dailyAudienceCount + Constants.total + audienceAccumulation
+        let audienceAccumulation =  audienceAccumulationNumber.decimalizedString
+        let dailyAudienceCount = audienceCountNumber.decimalizedString
+
+        audienceLabelText = Constants.today + dailyAudienceCount + Constants.total + audienceAccumulation
 
         return audienceLabelText
     }
@@ -193,11 +193,6 @@ final class DailyBoxOfficeCell: UICollectionViewListCell {
         rankChangesAttributedText.append(text)
 
         return rankChangesAttributedText
-    }
-
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 
 }

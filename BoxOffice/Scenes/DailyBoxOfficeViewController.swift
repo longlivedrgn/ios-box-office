@@ -9,16 +9,12 @@ import UIKit
 
 final class DailyBoxOfficeViewController: UIViewController {
 
-    enum Section {
+    private enum Section {
         case main
     }
 
-    enum Constants {
-        static let formerNavigationItemTitle = "데이터 받아오는 중~!"
-    }
-
-    typealias DataSource = UICollectionViewDiffableDataSource<Section, DailyBoxOffice>
-    typealias SnapShot = NSDiffableDataSourceSnapshot<Section, DailyBoxOffice>
+    private typealias DataSource = UICollectionViewDiffableDataSource<Section, DailyBoxOffice>
+    private typealias SnapShot = NSDiffableDataSourceSnapshot<Section, DailyBoxOffice>
 
     private var loadingIndicatorView = UIActivityIndicatorView(style: .large)
     private let boxOfficeManager = BoxOfficeAPIManager()
@@ -32,25 +28,26 @@ final class DailyBoxOfficeViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setUp()
+        setUpUI()
         configureCollectionView()
         configureDataSource()
-        configureRefreshControl()
+        showIndicatorview()
         fetchBoxOfficeData()
     }
 
-    private func setUp() {
-        navigationItem.title = Constants.formerNavigationItemTitle
+    private func setUpUI() {
         view.backgroundColor = .systemBackground
     }
 
     private func configureCollectionView() {
         dailyBoxOfficeCollectionView = UICollectionView(frame: .zero, collectionViewLayout: createLayout())
         guard let dailyBoxOfficeCollectionView else { return }
+        dailyBoxOfficeCollectionView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(dailyBoxOfficeCollectionView)
         dailyBoxOfficeCollectionView.register(DailyBoxOfficeCell.self,
                                               forCellWithReuseIdentifier: DailyBoxOfficeCell.identifier)
         configureCollectionViewLayoutConstraint()
+        configureRefreshControl()
     }
 
     private func createLayout() -> UICollectionViewCompositionalLayout {
@@ -66,8 +63,6 @@ final class DailyBoxOfficeViewController: UIViewController {
     private func configureCollectionViewLayoutConstraint() {
         guard let dailyBoxOfficeCollectionView else { return }
         let safeAreaGuide = view.safeAreaLayoutGuide
-
-        dailyBoxOfficeCollectionView.translatesAutoresizingMaskIntoConstraints = false
         dailyBoxOfficeCollectionView.leadingAnchor.constraint(equalTo: safeAreaGuide.leadingAnchor).isActive = true
         dailyBoxOfficeCollectionView.trailingAnchor.constraint(equalTo: safeAreaGuide.trailingAnchor).isActive = true
         dailyBoxOfficeCollectionView.bottomAnchor.constraint(equalTo: safeAreaGuide.bottomAnchor).isActive = true
@@ -90,14 +85,14 @@ final class DailyBoxOfficeViewController: UIViewController {
     private func fetchBoxOfficeData() {
         Task {
         showIndicatorview()
-        let yesterDay = Date.yesterDayDateConvertToString()
-        let yesterdayDashExcepted = yesterDay.except(for: "-")
 
+        let yesterDay = Date.yesterDayDateConvertToString()
+        let yesterdayDashExcepted = yesterDay.without("-")
         let boxOffice = try await boxOfficeManager.fetchData(to: BoxOffice.self, endPoint: .boxOffice(targetDate: yesterdayDashExcepted))
-            movies = boxOffice.result.dailyBoxOfficeList
+            movies = boxOffice.result.dailyBoxOffices
             navigationItem.title = yesterDay
-            self.dailyBoxOfficeCollectionView?.refreshControl?.endRefreshing()
-            hideIndicatorView()
+            self.endRefresh()
+            self.removeIndicatorView()
         }
     }
 
@@ -115,27 +110,15 @@ final class DailyBoxOfficeViewController: UIViewController {
 
 extension DailyBoxOfficeViewController {
 
-    private func window() -> UIWindow {
-        let scenes = UIApplication.shared.connectedScenes
-        let windowScene = scenes.first as? UIWindowScene
-        guard let window = windowScene?.windows.first else { return UIWindow() }
-
-        return window
-    }
-
     private func showIndicatorview() {
-        let window = window()
-        loadingIndicatorView.frame = window.frame
+        loadingIndicatorView.frame = view.frame
         loadingIndicatorView.color = .systemBlue
-        window.addSubview(loadingIndicatorView)
+        view.addSubview(loadingIndicatorView)
         loadingIndicatorView.startAnimating()
     }
     
-    private func hideIndicatorView() {
-        let window = window()
-        let indicatorView = window.subviews.first { $0 is UIActivityIndicatorView }
-        guard let indicatorView else { return }
-        indicatorView.removeFromSuperview()
+    private func removeIndicatorView() {
+        loadingIndicatorView.removeFromSuperview()
     }
 
     private func configureRefreshControl() {
@@ -145,6 +128,10 @@ extension DailyBoxOfficeViewController {
         dailyBoxOfficeCollectionView.refreshControl?.addTarget(self,
                                                                action: #selector(handleRefreshControl),
                                                                for: .valueChanged)
+    }
+
+    private func endRefresh() {
+        dailyBoxOfficeCollectionView?.refreshControl?.endRefreshing()
     }
 
     @objc private func handleRefreshControl() {
