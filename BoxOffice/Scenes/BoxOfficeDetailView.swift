@@ -7,7 +7,7 @@
 
 import UIKit
 
-class BoxOfficeDetailView: UIView {
+final class BoxOfficeDetailView: UIView {
 
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -32,204 +32,39 @@ class BoxOfficeDetailView: UIView {
         return imageView
     }()
 
-    private let directorKeyLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 20)
-        label.text = "감독"
+    private let directorKeyLabel = DailyBoxOfficeDetailKeyLabel(text: "감독")
+    private let yearOfProductionKeyLabel = DailyBoxOfficeDetailKeyLabel(text: "제작년도")
+    private let openDateKeyLabel = DailyBoxOfficeDetailKeyLabel(text: "개봉일")
+    private let runningTimeKeyLabel = DailyBoxOfficeDetailKeyLabel(text: "상영시간")
+    private let movieRatingKeyLabel = DailyBoxOfficeDetailKeyLabel(text: "관람등급")
+    private let nationKeyLabel = DailyBoxOfficeDetailKeyLabel(text: "제작국가")
+    private let genreKeyLabel = DailyBoxOfficeDetailKeyLabel(text: "장르")
+    private let actorsKeyLabel = DailyBoxOfficeDetailKeyLabel(text: "배우")
 
-        return label
-    }()
+    private let directorValueLabel = DailyBoxOfficeDetailValueLabel()
+    private let yearOfProductionValueLabel = DailyBoxOfficeDetailValueLabel()
+    private let openDateValueLabel = DailyBoxOfficeDetailValueLabel()
+    private let runningTimeValueLabel = DailyBoxOfficeDetailValueLabel()
+    private let movieRatingValueLabel = DailyBoxOfficeDetailValueLabel()
+    private let nationValueLabel = DailyBoxOfficeDetailValueLabel()
+    private let genreValueLabel = DailyBoxOfficeDetailValueLabel()
+    private let actorsValueLabel = DailyBoxOfficeDetailValueLabel()
 
-    private let directorValueLabel: UILabel = {
-        let label = UILabel()
-        label.text = "-"
-
-        return label
-    }()
-
-    private lazy var directorInfoStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [directorKeyLabel, directorValueLabel])
-        stackView.distribution = .fillProportionally
-        stackView.alignment = .fill
-        stackView.axis = .horizontal
-
-        return stackView
-    }()
-
-    private let yearOfProductionKeyLabel: UILabel = {
-        let label = UILabel()
-        label.text = "제작년도"
-        label.font = UIFont.boldSystemFont(ofSize: 20)
-
-        return label
-    }()
-
-    private let yearOfProductionValueLabel: UILabel = {
-        let label = UILabel()
-        label.text = "-"
-
-        return label
-    }()
-
-    private lazy var yearOfProductionInfoStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [yearOfProductionKeyLabel, yearOfProductionValueLabel])
-        stackView.distribution = .fillProportionally
-        stackView.alignment = .fill
-        stackView.axis = .horizontal
-
-        return stackView
-    }()
-
-    private let openDateKeyLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 20)
-        label.text = "개봉일"
-
-        return label
-    }()
-
-    private let openDateValueLabel: UILabel = {
-        let label = UILabel()
-        label.text = "-"
-
-        return label
-    }()
-
-    private lazy var openDateInfoStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [openDateKeyLabel, openDateValueLabel])
-        stackView.distribution = .fillProportionally
-        stackView.alignment = .fill
-        stackView.axis = .horizontal
-
-        return stackView
-    }()
-
-    private let runningTimeKeyLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 20)
-        label.text = "상영시간"
-
-        return label
-    }()
-
-    private let runningTimeValueLabel: UILabel = {
-        let label = UILabel()
-        label.text = "-"
-
-        return label
-    }()
-
-    private lazy var runningTimeInfoStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [runningTimeKeyLabel, runningTimeValueLabel])
-        stackView.distribution = .fillProportionally
-        stackView.alignment = .fill
-        stackView.axis = .horizontal
-
-        return stackView
-    }()
-
-    private let movieRatingKeyLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 20)
-        label.text = "관람등급"
-
-        return label
-    }()
-
-    private let movieRatingValueLabel: UILabel = {
-        let label = UILabel()
-        label.text = "-"
-
-        return label
-    }()
-    
-    private lazy var movieRatingInfoStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [movieRatingKeyLabel, movieRatingValueLabel])
-        stackView.distribution = .fillProportionally
-        stackView.alignment = .fill
-        stackView.axis = .horizontal
-
-        return stackView
-    }()
-
-    private let nationKeyLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 20)
-        label.text = "제작국가"
-
-        return label
-    }()
-
-    private let nationValueLabel: UILabel = {
-        let label = UILabel()
-        label.text = "-"
-
-        return label
-    }()
-
-    private lazy var nationInfoStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [nationKeyLabel, nationValueLabel])
-        stackView.distribution = .fillProportionally
-        stackView.alignment = .fill
-        stackView.axis = .horizontal
-
-        return stackView
-    }()
-
-    private let genreKeyLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 20)
-        label.text = "장르"
-
-        return label
-    }()
-
-    private let genreValueLabel: UILabel = {
-        let label = UILabel()
-        label.text = "-"
-
-        return label
-    }()
-
-    private lazy var genreInfoStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [genreKeyLabel, genreValueLabel])
-        stackView.distribution = .fillProportionally
-        stackView.alignment = .fill
-        stackView.axis = .horizontal
-
-        return stackView
-    }()
-
-    private let actorsKeyLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 20)
-        label.text = "배우"
-
-        return label
-    }()
-
-    private let actorsValueLabel: UILabel = {
-        let label = UILabel()
-
-        return label
-    }()
-
-    private lazy var actorsInfoStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [actorsKeyLabel, actorsValueLabel])
-        stackView.distribution = .fillProportionally
-        stackView.alignment = .fill
-        stackView.axis = .horizontal
-
-        return stackView
-    }()
+    private lazy var directorInfoStackView = KeyValueInformationStackView(arrangedSubviews: [directorKeyLabel, directorValueLabel])
+    private lazy var yearOfProductionInfoStackView = KeyValueInformationStackView(arrangedSubviews: [yearOfProductionKeyLabel, yearOfProductionValueLabel])
+    private lazy var openDateInfoStackView = KeyValueInformationStackView(arrangedSubviews: [openDateKeyLabel, openDateValueLabel])
+    private lazy var runningTimeInfoStackView = KeyValueInformationStackView(arrangedSubviews: [runningTimeKeyLabel, runningTimeValueLabel])
+    private lazy var movieRatingInfoStackView = KeyValueInformationStackView(arrangedSubviews: [movieRatingKeyLabel, movieRatingValueLabel])
+    private lazy var nationInfoStackView = KeyValueInformationStackView(arrangedSubviews: [nationKeyLabel, nationValueLabel])
+    private lazy var genreInfoStackView = KeyValueInformationStackView(arrangedSubviews: [genreKeyLabel, genreValueLabel])
+    private lazy var actorsInfoStackView = KeyValueInformationStackView(arrangedSubviews: [actorsKeyLabel, actorsValueLabel])
 
     private lazy var boxOfficeDetailStackView: UIStackView = {
         let stackView = UIStackView(
             arrangedSubviews: [directorInfoStackView, yearOfProductionInfoStackView, openDateInfoStackView, runningTimeInfoStackView, movieRatingInfoStackView, nationInfoStackView, genreInfoStackView, actorsInfoStackView])
         stackView.distribution = .fillProportionally
         stackView.alignment = .fill
-        stackView.spacing = 15
-
+        stackView.spacing = 2
         stackView.axis = .vertical
 
         return stackView
@@ -237,7 +72,7 @@ class BoxOfficeDetailView: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setup()
+        setupUI()
         configureLayout()
     }
 
@@ -247,17 +82,17 @@ class BoxOfficeDetailView: UIView {
 
     // 새로운 객체를 만드는 게 훨씬 효율적일듯!
     func configure(with movie: BoxOfficeDetailViewController.MovieDetailModel) {
-        directorValueLabel.text = movie.director
+        directorValueLabel.text = movie.director.description
         yearOfProductionValueLabel.text = movie.yearOfProduction
         openDateValueLabel.text = movie.openDate
-        runningTimeValueLabel.text = movie.runningTime
-        movieRatingValueLabel.text = movie.movieRating
-        nationValueLabel.text = movie.nation
-        genreValueLabel.text = "\(movie.genres)"
-        actorsValueLabel.text = "\(movie.actors)"
+        runningTimeValueLabel.text = "\(movie.runningTime)분"
+        movieRatingValueLabel.text = movie.movieRating ?? "-"
+        nationValueLabel.text = movie.nation ?? "-"
+        genreValueLabel.text = movie.genres.description
+        actorsValueLabel.text = movie.actors.description
     }
 
-    private func setup() {
+    private func setupUI() {
         addSubview(scrollView)
         scrollView.addSubview(contentView)
         contentView.addSubview(movieImageView)
@@ -269,12 +104,13 @@ class BoxOfficeDetailView: UIView {
         configureContentViewConstraint()
         configureImageViewConstraint()
         configureStackViewConstraint()
+        configureKeyLabelConstraint()
     }
 
     private func configureScrollViewConstraint() {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
-        scrollView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        scrollView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        scrollView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor).isActive = true
+        scrollView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor).isActive = true
         scrollView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         scrollView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
     }
@@ -300,7 +136,14 @@ class BoxOfficeDetailView: UIView {
         boxOfficeDetailStackView.translatesAutoresizingMaskIntoConstraints = false
         boxOfficeDetailStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10).isActive = true
         boxOfficeDetailStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10).isActive = true
-        boxOfficeDetailStackView.topAnchor.constraint(equalTo: movieImageView.bottomAnchor).isActive = true
+        boxOfficeDetailStackView.topAnchor.constraint(equalTo: movieImageView.bottomAnchor, constant: 10).isActive = true
         boxOfficeDetailStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
+    }
+
+    private func configureKeyLabelConstraint() {
+        [directorKeyLabel, yearOfProductionKeyLabel, openDateKeyLabel, runningTimeKeyLabel, movieRatingKeyLabel, nationKeyLabel, genreKeyLabel, actorsKeyLabel].forEach { label in
+            label.translatesAutoresizingMaskIntoConstraints = false
+            label.widthAnchor.constraint(equalTo: boxOfficeDetailStackView.widthAnchor, multiplier: 0.3).isActive = true
+        }
     }
 }

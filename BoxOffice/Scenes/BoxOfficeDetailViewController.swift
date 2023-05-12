@@ -10,12 +10,12 @@ import UIKit
 class BoxOfficeDetailViewController: UIViewController {
 
     struct MovieDetailModel {
-        let director: String?
+        let director: [String]
         let yearOfProduction: String
         let openDate: String
         let runningTime: String
-        let movieRating: String
-        let nation: String
+        let movieRating: String?
+        let nation: String?
         let genres: [String]
         let actors: [String]
     }
@@ -24,7 +24,7 @@ class BoxOfficeDetailViewController: UIViewController {
     var BoxOfficeAPIManager: BoxOfficeAPIManager?
 
     lazy var boxOfficeDetailView: BoxOfficeDetailView = {
-        let view = BoxOfficeDetailView(frame: view.bounds)
+        let view = BoxOfficeDetailView(frame: view.frame)
 
         return view
     }()
@@ -37,7 +37,6 @@ class BoxOfficeDetailViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .red
         view.addSubview(boxOfficeDetailView)
         fetchBoxOfficeDetailData()
     }
@@ -60,12 +59,12 @@ class BoxOfficeDetailViewController: UIViewController {
         let movieInformation = movie.movieInformationResult.movieInformation
 
         // director 없는 경우 해결해야된다.
-        let director = movieInformation.directors[0].name
+        let director = movieInformation.directors.map { $0.name }
         let openDate = movieInformation.openDate
         let yearOfProduction = movieInformation.yearOfProduction
         let runningTime = movieInformation.runningTime
-        let movieRating = movieInformation.audits[0].movieRating
-        let nation = movieInformation.nations[0].name
+        let movieRating = movieInformation.audits[safe: 0]?.movieRating
+        let nation = movieInformation.nations[safe: 0]?.name
         let genres = movieInformation.genres.map { $0.name }
         let actors = movieInformation.actors.map { $0.name }
 

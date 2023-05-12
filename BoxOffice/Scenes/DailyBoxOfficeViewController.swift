@@ -66,13 +66,12 @@ final class DailyBoxOfficeViewController: UIViewController {
 
     private func configureCollectionViewLayoutConstraint() {
         guard let dailyBoxOfficeCollectionView else { return }
-        let safeAreaGuide = view.safeAreaLayoutGuide
 
         dailyBoxOfficeCollectionView.translatesAutoresizingMaskIntoConstraints = false
-        dailyBoxOfficeCollectionView.leadingAnchor.constraint(equalTo: safeAreaGuide.leadingAnchor).isActive = true
-        dailyBoxOfficeCollectionView.trailingAnchor.constraint(equalTo: safeAreaGuide.trailingAnchor).isActive = true
-        dailyBoxOfficeCollectionView.bottomAnchor.constraint(equalTo: safeAreaGuide.bottomAnchor).isActive = true
-        dailyBoxOfficeCollectionView.topAnchor.constraint(equalTo: safeAreaGuide.topAnchor).isActive = true
+        dailyBoxOfficeCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        dailyBoxOfficeCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        dailyBoxOfficeCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        dailyBoxOfficeCollectionView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
     }
 
     private func configureDataSource() {
