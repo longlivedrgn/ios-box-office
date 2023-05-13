@@ -40,22 +40,15 @@ extension BoxOfficeAPIEndpoints {
         urlCompoenets?.queryItems = endPoint.queryItems
 
         guard let url = urlCompoenets?.url else { return nil }
-        
-        print("[[original]]\n   \(url.description)")
-//        guard let urlString = url.description.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else { return nil }
-//        guard let encodedUrl = URL(string: urlString) else { return nil }
-
         var urlRequest = URLRequest(url: url)
 
         if case let .movieImage(moiveName) = self {
             print(moiveName)
-            urlRequest.setValue("KakaoAk e37dbfb127b8ed041816c0ddd0c96a4a", forHTTPHeaderField: "Authorization")
+            urlRequest.setValue("KakaoAK e37dbfb127b8ed041816c0ddd0c96a4a", forHTTPHeaderField: "Authorization")
         }
-        print("[[After]]\n   \(urlRequest.description)")
         return urlRequest
     }
-//https://dapi.kakao.com/v2/search/image?query=%EB%AC%B8%EC%9E%AC%EC%9D%B8%EC%9E%85%EB%8B%88%EB%8B%A4&size=1&page=1"
-//https://dapi.kakao.com/v2/search/image?query=드림&page=1&size=1
+
     private enum QueryConstant {
         static let apiKeyQueryName = "key"
         static let apiKeyQueryValue = "6c4b02fc76306e47a3ada0534d4cc519"
@@ -84,8 +77,7 @@ extension BoxOfficeAPIEndpoints {
 
         case . movieImage(let movieName):
             let movieNameQueryItem = URLQueryItem(name: QueryConstant.kakaoSearchTargetQueryName,
-                                                  // 여기까지 했음☠️☠️☠️☠️☠️☠️☠️☠️☠️☠️☠️☠️☠️☠️☠️☠️ 한글 들어간 url 인코딩 시키다 실패함
-                                                  value: movieName.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed))
+                                                  value: movieName)
             let resultSizeQueryItem = URLQueryItem(name: QueryConstant.kakaoSearchSizeQueryName,
                                                    value: QueryConstant.stringNumberOne)
             let resultPageQueryItem = URLQueryItem(name: QueryConstant.kakaoSearchPageQueryName,

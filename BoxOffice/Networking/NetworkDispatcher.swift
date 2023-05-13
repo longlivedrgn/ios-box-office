@@ -22,7 +22,7 @@ struct NetworkDispatcher {
 
         let (data, response) = try await session.data(for: urlRequest)
         guard let httpResponse = response as? HTTPURLResponse,
-              (200...299).contains(httpResponse.statusCode) else {
+              httpResponse.isValidResponse else {
             print(NetworkError.outOfResponseCode)
             throw NetworkError.outOfResponseCode
         }
