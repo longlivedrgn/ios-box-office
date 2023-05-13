@@ -27,7 +27,6 @@ final class BoxOfficeDetailView: UIView {
         let imageView = UIImageView()
         imageView.backgroundColor = .red
         imageView.image = UIImage(named: "square.and.arrow.up")
-//        imageView.contentMode = .scaleAspectFill
 
         return imageView
     }()
@@ -80,7 +79,6 @@ final class BoxOfficeDetailView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    // 새로운 객체를 만드는 게 훨씬 효율적일듯!
     func configure(with movie: BoxOfficeDetailViewController.MovieDetailModel) {
         directorValueLabel.text = movie.director.description
         yearOfProductionValueLabel.text = movie.yearOfProduction

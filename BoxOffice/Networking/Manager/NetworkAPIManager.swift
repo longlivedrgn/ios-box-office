@@ -13,7 +13,7 @@ struct NetworkAPIManager {
     private let networkDispatcher = NetworkDispatcher()
     
     func fetchData(to type: Decodable.Type,
-                   endPoint: BoxOfficeAPIEndpoints,
+                   endPoint: APIEndpoint,
                    completionHandler: @escaping (Decodable) -> Void
     ) {
         let urlRequest = endPoint.urlRequest

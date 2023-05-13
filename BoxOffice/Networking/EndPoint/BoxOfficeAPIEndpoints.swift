@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum BoxOfficeAPIEndpoints {
+enum BoxOfficeAPIEndpoints: APIEndpoint {
 
     case boxOffice(targetDate: String)
     case movieDetail(movieCode: String)
@@ -16,7 +16,7 @@ enum BoxOfficeAPIEndpoints {
 
 extension BoxOfficeAPIEndpoints {
 
-    private var endPoint: EndPoint {
+    var endPoint: EndPoint {
         switch self {
         case .boxOffice:
             return EndPoint(baseURL: "https://www.kobis.or.kr",
@@ -28,18 +28,6 @@ extension BoxOfficeAPIEndpoints {
                             queryItems: makeQueryItems())
         }
     }
-
-    var urlRequest: URLRequest? {
-        var urlCompoenets = URLComponents(string: endPoint.baseURL)
-
-        urlCompoenets?.path = endPoint.path
-        urlCompoenets?.queryItems = endPoint.queryItems
-
-        guard let url = urlCompoenets?.url else { return nil }
-        let urlRequest = URLRequest(url: url)
-
-        return urlRequest
-    }
     
     private enum QueryConstant {
         static let apiKeyQueryName = "key"
@@ -48,7 +36,7 @@ extension BoxOfficeAPIEndpoints {
         static let targetDateQueryName = "targetDt"
     }
     
-    private func makeQueryItems() -> [URLQueryItem] {
+    func makeQueryItems() -> [URLQueryItem] {
         let apiKeyQueryItem = URLQueryItem(name: QueryConstant.apiKeyQueryName,
                                            value: QueryConstant.apiKeyQueryValue)
         

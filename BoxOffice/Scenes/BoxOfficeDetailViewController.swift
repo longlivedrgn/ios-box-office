@@ -10,6 +10,7 @@ import UIKit
 class BoxOfficeDetailViewController: UIViewController {
 
     struct MovieDetailModel {
+        let imageSearchName: String
         let director: [String]
         let yearOfProduction: String
         let openDate: String
@@ -21,7 +22,7 @@ class BoxOfficeDetailViewController: UIViewController {
     }
 
     var movie: DailyBoxOffice?
-    var BoxOfficeAPIManager: BoxOfficeAPIManager?
+    var BoxOfficeAPIManager: NetworkAPIManager?
 
     lazy var boxOfficeDetailView: BoxOfficeDetailView = {
         let view = BoxOfficeDetailView(frame: view.frame)
@@ -29,7 +30,7 @@ class BoxOfficeDetailViewController: UIViewController {
         return view
     }()
 
-    convenience init(movie: DailyBoxOffice, BoxOfficeAPIManager: BoxOfficeAPIManager) {
+    convenience init(movie: DailyBoxOffice, BoxOfficeAPIManager: NetworkAPIManager) {
         self.init()
         self.movie = movie
         self.BoxOfficeAPIManager = BoxOfficeAPIManager
@@ -43,22 +44,27 @@ class BoxOfficeDetailViewController: UIViewController {
 
     private func fetchBoxOfficeDetailData() {
         guard let movieCode = movie?.movieCode else { return }
+        guard let movieDetailEndPoint = BoxOfficeAPIEndpoints.movieDetail(movieCode: movieCode) as? APIEndpoint else { return }
 
         BoxOfficeAPIManager?.fetchData(
             to: MovieDetail.self,
-            endPoint: .movieDetail(movieCode: movieCode)) { [weak self] data in
+            endPoint: movieDetailEndPoint) { [weak self] data in
                 guard let movie = data as? MovieDetail else { return }
                 guard let movieDetailModel = self?.convertToMovieDetailModel(from: movie) else { return }
                 DispatchQueue.main.async {
                     self?.boxOfficeDetailView.configure(with: movieDetailModel)
                 }
-        }
+            }
+
+        BoxOfficeAPIManager?.fetchData(to: ImageURL.self, endPoint: <#T##APIEndpoint#>, completionHandler: <#T##(Decodable) -> Void#>)
+
     }
 
     private func convertToMovieDetailModel(from movie: MovieDetail) -> MovieDetailModel {
         let movieInformation = movie.movieInformationResult.movieInformation
 
-        // director 없는 경우 해결해야된다.
+        let movieName = movieInformation.name
+        let imageSearchName = "\(movieName) 영화 포스터"
         let director = movieInformation.directors.map { $0.name }
         let openDate = movieInformation.openDate
         let yearOfProduction = movieInformation.yearOfProduction
@@ -68,6 +74,15 @@ class BoxOfficeDetailViewController: UIViewController {
         let genres = movieInformation.genres.map { $0.name }
         let actors = movieInformation.actors.map { $0.name }
 
-        return MovieDetailModel(director: director, yearOfProduction: yearOfProduction, openDate: openDate, runningTime: runningTime, movieRating: movieRating, nation: nation, genres: genres, actors: actors)
+        return MovieDetailModel(
+            imageSearchName: imageSearchName,
+            director: director,
+            yearOfProduction: yearOfProduction,
+            openDate: openDate,
+            runningTime: runningTime,
+            movieRating: movieRating,
+            nation: nation,
+            genres: genres,
+            actors: actors)
     }
 }

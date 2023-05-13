@@ -6,3 +6,16 @@
 //
 
 import Foundation
+
+struct ImageURL: Decodable {
+    let documents: [Document]
+}
+
+struct Document: Decodable {
+    let imageURL: String
+
+
+    enum CodingKeys: String, CodingKey {
+        case imageURL = "image_url"
+    }
+}
