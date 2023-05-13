@@ -1,5 +1,5 @@
 //
-//  BoxOfficeAPIManager.swift
+//  NetworkAPIManager.swift
 //  BoxOffice
 //
 //  Created by 김용재 on 2023/04/27.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct BoxOfficeAPIManager {
+struct NetworkAPIManager {
     
     private let deserializer = JSONDeserializer()
     private let networkDispatcher = NetworkDispatcher()
@@ -21,7 +21,7 @@ struct BoxOfficeAPIManager {
         networkDispatcher.performRequest(urlRequest) { networkResult in
             switch networkResult {
             case .success(let data):
-                do { 
+                do {
                     let decodedData = try deserializer.deserialize(type: type, data: data)
                     completionHandler(decodedData)
                 }
