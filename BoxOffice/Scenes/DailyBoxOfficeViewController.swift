@@ -13,6 +13,8 @@ final class DailyBoxOfficeViewController: UIViewController {
         case main
     }
 
+
+
     private typealias DataSource = UICollectionViewDiffableDataSource<Section, DailyBoxOffice>
     private typealias SnapShot = NSDiffableDataSourceSnapshot<Section, DailyBoxOffice>
 
@@ -85,11 +87,11 @@ final class DailyBoxOfficeViewController: UIViewController {
 
     private func fetchBoxOfficeData() {
         Task {
-        showIndicatorview()
+            showIndicatorview()
 
-        let yesterDay = Date.yesterDayDateConvertToString()
-        let yesterdayDashExcepted = yesterDay.without("-")
-        let boxOffice = try await boxOfficeManager.fetchData(to: BoxOffice.self, endPoint: .boxOffice(targetDate: yesterdayDashExcepted))
+            let yesterDay = Date.yesterDayDateConvertToString()
+            let yesterdayDashExcepted = yesterDay.without("-")
+            let boxOffice = try await boxOfficeManager.fetchData(to: BoxOffice.self, endPoint: .boxOffice(targetDate: yesterdayDashExcepted))
             movies = boxOffice.result.dailyBoxOffices
             navigationItem.title = yesterDay
             self.endRefresh()
@@ -146,13 +148,23 @@ extension DailyBoxOfficeViewController: UICollectionViewDelegate {
         guard let selectedMoiveCode = dataSource?.itemIdentifier(for: indexPath)?.movieCode else { return }
         let movieDetailView = MovieDetailViewController()
         Task {
-            let movieDetail = try await boxOfficeManager.fetchData(to: MovieDetail.self, endPoint: .movieDetail(movieCode: selectedMoiveCode))
-            let movieImageInformation = try await boxOfficeManager.fetchData(to: SearchedImage.self, endPoint: .movieImage(moiveName: movieDetail.movieInformationResult.movieInformation.name))
+            let movieDetail = try await boxOfficeManager.fetchData(
+                to: MovieDetail.self,
+                endPoint: .movieDetail(movieCode: selectedMoiveCode))
+            let movieName = movieDetail.movieInformationResult.movieInformation.name
+            movieDetailView.movieDetailInformation = movieDetail.movieInformationResult.movieInformation
 
-                movieDetailView.movieDetailInformation = movieDetail.movieInformationResult.movieInformation
+            let movieImageInformation = try await boxOfficeManager.fetchData(
+                to: SearchedImage.self,
+                endPoint: .movieImage(moiveName: movieName))
 
-                movieDetailView.moviePosterImage = UIImage(systemName: "x.circle")
-                self.navigationController?.pushViewController(movieDetailView, animated: true)
+            if let imageUrlStinrg = movieImageInformation.result.first?.imageURL {
+                let movieImageData = try await boxOfficeManager.fetchImageWithURLString(imageUrlStinrg)
+                movieDetailView.moviePosterImage = movieImageData
+            } else {
+                movieDetailView.moviePosterImage = UIImage(systemName: Constants.noneImageString)
+            }
+            self.navigationController?.pushViewController(movieDetailView, animated: true)
         }
     }
 }

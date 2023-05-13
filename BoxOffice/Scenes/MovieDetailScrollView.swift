@@ -168,6 +168,7 @@ final class MovieDetailScrollView: UIScrollView {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .horizontal
+        stackView.layer.borderWidth = Constants.labelBorderWidth
         return stackView
     }()
 
@@ -175,6 +176,7 @@ final class MovieDetailScrollView: UIScrollView {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .horizontal
+        stackView.layer.borderWidth = Constants.labelBorderWidth
         return stackView
     }()
 
@@ -182,6 +184,7 @@ final class MovieDetailScrollView: UIScrollView {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .horizontal
+        stackView.layer.borderWidth = Constants.labelBorderWidth
         return stackView
     }()
 
@@ -189,6 +192,7 @@ final class MovieDetailScrollView: UIScrollView {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .horizontal
+        stackView.layer.borderWidth = Constants.labelBorderWidth
         return stackView
     }()
 
@@ -196,6 +200,7 @@ final class MovieDetailScrollView: UIScrollView {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .horizontal
+        stackView.layer.borderWidth = Constants.labelBorderWidth
         return stackView
     }()
 
@@ -203,6 +208,7 @@ final class MovieDetailScrollView: UIScrollView {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .horizontal
+        stackView.layer.borderWidth = Constants.labelBorderWidth
         return stackView
     }()
 
@@ -210,6 +216,7 @@ final class MovieDetailScrollView: UIScrollView {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .horizontal
+        stackView.layer.borderWidth = Constants.labelBorderWidth
         return stackView
     }()
 

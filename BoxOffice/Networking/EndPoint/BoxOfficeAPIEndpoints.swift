@@ -42,8 +42,7 @@ extension BoxOfficeAPIEndpoints {
         guard let url = urlCompoenets?.url else { return nil }
         var urlRequest = URLRequest(url: url)
 
-        if case let .movieImage(moiveName) = self {
-            print(moiveName)
+        if case .movieImage(_) = self {
             urlRequest.setValue("KakaoAK e37dbfb127b8ed041816c0ddd0c96a4a", forHTTPHeaderField: "Authorization")
         }
         return urlRequest
