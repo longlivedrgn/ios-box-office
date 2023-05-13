@@ -14,6 +14,7 @@ struct BoxOfficeAPIManager {
     
     func fetchData<T: Decodable>(to type: T.Type,
                    endPoint: BoxOfficeAPIEndpoints) async throws -> T {
+
         guard let urlRequest = endPoint.urlRequest else { throw NetworkError.invalidURL }
         guard let data = try? await networkDispatcher.performRequest(urlRequest) else { throw NetworkError.emptyData}
         let decodedData = try self.deserializer.deserialize(type: T.self, data: data)

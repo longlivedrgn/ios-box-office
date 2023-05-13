@@ -42,6 +42,7 @@ final class DailyBoxOfficeViewController: UIViewController {
     private func configureCollectionView() {
         dailyBoxOfficeCollectionView = UICollectionView(frame: .zero, collectionViewLayout: createLayout())
         guard let dailyBoxOfficeCollectionView else { return }
+        dailyBoxOfficeCollectionView.delegate = self
         dailyBoxOfficeCollectionView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(dailyBoxOfficeCollectionView)
         dailyBoxOfficeCollectionView.register(DailyBoxOfficeCell.self,
@@ -138,4 +139,20 @@ extension DailyBoxOfficeViewController {
         fetchBoxOfficeData()
     }
 
+}
+
+extension DailyBoxOfficeViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let selectedMoiveCode = dataSource?.itemIdentifier(for: indexPath)?.movieCode else { return }
+        let movieDetailView = MovieDetailViewController()
+        Task {
+            let movieDetail = try await boxOfficeManager.fetchData(to: MovieDetail.self, endPoint: .movieDetail(movieCode: selectedMoiveCode))
+            let movieImageInformation = try await boxOfficeManager.fetchData(to: SearchedImage.self, endPoint: .movieImage(moiveName: movieDetail.movieInformationResult.movieInformation.name))
+
+                movieDetailView.movieDetailInformation = movieDetail.movieInformationResult.movieInformation
+
+                movieDetailView.moviePosterImage = UIImage(systemName: "x.circle")
+                self.navigationController?.pushViewController(movieDetailView, animated: true)
+        }
+    }
 }
