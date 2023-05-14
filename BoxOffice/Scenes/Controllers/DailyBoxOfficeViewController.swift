@@ -93,13 +93,15 @@ final class DailyBoxOfficeViewController: UIViewController {
         let yesterdayDashExcepted = yesterDay.except(for: "-")
         let yesterDayboxOfficeEndPoint = BoxOfficeAPIEndpoints.boxOffice(targetDate: yesterdayDashExcepted)
 
-        boxOfficeManager.fetchData(to: BoxOffice.self, endPoint: yesterDayboxOfficeEndPoint)
-        { [weak self] data in
-            guard let boxOffice = data as? BoxOffice else { return }
-            self?.movies = boxOffice.result.dailyBoxOfficeList
+        Task {
+            let decodedData = try await boxOfficeManager.fetchData(
+                to: BoxOffice.self,
+                endPoint: yesterDayboxOfficeEndPoint)
+            guard let boxOffice = decodedData as? BoxOffice else { return }
+            movies = boxOffice.result.dailyBoxOfficeList
             DispatchQueue.main.async {
-                self?.navigationItem.title = yesterDay
-                self?.hideIndicatorView()
+                self.navigationItem.title = yesterDay
+                self.hideIndicatorView()
             }
         }
     }

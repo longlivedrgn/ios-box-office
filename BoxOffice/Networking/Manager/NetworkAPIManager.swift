@@ -10,27 +10,19 @@ import Foundation
 struct NetworkAPIManager {
     
     private let deserializer = JSONDeserializer()
-    private let networkDispatcher = NetworkDispatcher()
+    let networkDispatcher = NetworkDispatcher()
     
-    func fetchData(to type: Decodable.Type,
-                   endPoint: APIEndpoint,
-                   completionHandler: @escaping (Decodable) -> Void
-    ) {
+    func fetchData(to type: Decodable.Type, endPoint: APIEndpoint) async throws -> Decodable? {
         let urlRequest = endPoint.urlRequest
+        let networkResult = try await networkDispatcher.performRequest(urlRequest)
 
-        networkDispatcher.performRequest(urlRequest) { networkResult in
-            switch networkResult {
-            case .success(let data):
-                do {
-                    let decodedData = try deserializer.deserialize(type: type, data: data)
-                    completionHandler(decodedData)
-                }
-                catch {
-                    print(NetworkError.failedDecoding.errorDescription)
-                }
-            case .failure(let error):
-                print(error.errorDescription)
-            }
+        switch networkResult {
+        case .success(let data):
+            let decodedData = try deserializer.deserialize(type: type, data: data)
+            return decodedData
+        case.failure(let error):
+            print(error.errorDescription)
+            return nil
         }
     }
     

@@ -25,8 +25,7 @@ final class BoxOfficeDetailView: UIView {
 
     private let movieImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.backgroundColor = .red
-        imageView.image = UIImage(named: "square.and.arrow.up")
+        imageView.image = UIImage(systemName: "hourglass")
 
         return imageView
     }()
@@ -77,6 +76,12 @@ final class BoxOfficeDetailView: UIView {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    func configureImage(with imageData: Data) {
+        DispatchQueue.main.async {
+            self.movieImageView.image = UIImage(data: imageData)
+        }
     }
 
     func configure(with movie: BoxOfficeDetailViewController.MovieDetailModel) {

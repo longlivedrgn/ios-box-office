@@ -245,15 +245,23 @@
 		8737BAB92A08917200BACC64 /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
-				63DF20F22970E1A0005DF7D1 /* DailyBoxOfficeViewController.swift */,
+				874682882A113AB800C1CB25 /* Controllers */,
 				879CD20F2A0B857600CBAB7A /* BoxOfficeDetailView.swift */,
-				879CD1CF2A0B5A6100CBAB7A /* BoxOfficeDetailViewController.swift */,
 				8737BABB2A08920600BACC64 /* DailyBoxOfficeCell.swift */,
 				87DC6A282A0DCAEC001F6940 /* DailyBoxOfficeDetailKeyLabel.swift */,
 				87DC6A2A2A0DD2D8001F6940 /* DailyBoxOfficeDetailValueLabel.swift */,
 				87DC6A2C2A0DD470001F6940 /* KeyValueInformationStackView.swift */,
 			);
 			path = Scenes;
+			sourceTree = "<group>";
+		};
+		874682882A113AB800C1CB25 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				63DF20F22970E1A0005DF7D1 /* DailyBoxOfficeViewController.swift */,
+				879CD1CF2A0B5A6100CBAB7A /* BoxOfficeDetailViewController.swift */,
+			);
+			path = Controllers;
 			sourceTree = "<group>";
 		};
 		F134B12E29FF5834005C5800 /* BoxOfficeNetworkTest */ = {
