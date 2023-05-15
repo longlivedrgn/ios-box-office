@@ -22,6 +22,8 @@ final class DailyBoxOfficeDetailValueLabel: UILabel {
         self.text = "-"
         self.textAlignment = .left
         self.numberOfLines = 0
+//        self.lineBreakStrategy = .hangulWordPriority
+//        self.lineBreakMode = .byClipping
     }
 
 }

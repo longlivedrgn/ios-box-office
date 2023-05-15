@@ -60,7 +60,7 @@ final class BoxOfficeDetailView: UIView {
     private lazy var boxOfficeDetailStackView: UIStackView = {
         let stackView = UIStackView(
             arrangedSubviews: [directorInfoStackView, yearOfProductionInfoStackView, openDateInfoStackView, runningTimeInfoStackView, movieRatingInfoStackView, nationInfoStackView, genreInfoStackView, actorsInfoStackView])
-        stackView.distribution = .fillProportionally
+//        stackView.distribution = .fillProportionally
         stackView.alignment = .fill
         stackView.spacing = 2
         stackView.axis = .vertical
@@ -112,8 +112,8 @@ final class BoxOfficeDetailView: UIView {
 
     private func configureScrollViewConstraint() {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
-        scrollView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor).isActive = true
-        scrollView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor).isActive = true
+        scrollView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        scrollView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         scrollView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         scrollView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
     }
